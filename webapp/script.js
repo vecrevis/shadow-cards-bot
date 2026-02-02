@@ -42,20 +42,36 @@ document.querySelectorAll('.tab').forEach(tab => {
 
 // Создание карты
 function createCard() {
-  const crypto = document.getElementById('crypto')?.value;
-  const fiat = document.getElementById('fiat')?.value;
-  const amount = parseFloat(document.getElementById('amount')?.value);
+  const crypto = document.getElementById('crypto').value;
+  const fiat = document.getElementById('fiat').value;
+  const amount = parseFloat(document.getElementById('amount').value);
 
-  if (!crypto || !fiat || isNaN(amount) || amount <= 0) {
-    tg.showAlert('Заполни все поля правильно');
+  if (isNaN(amount) || amount <= 0) {
+    tg.showAlert('Enter a positive amount');
     return;
   }
 
-  if (loader) loader.classList.remove('hidden');
+  // Показываем лоадер
+  loader.classList.remove('hidden');
 
+  // Фейковая задержка 2 секунды (имитация обработки)
   setTimeout(() => {
-    const payload = JSON.stringify({ action: 'create_card', crypto, fiat, amount });
-    console.log('Отправляю данные:', payload);
+    const payload = JSON.stringify({
+      action: 'create_card',
+      crypto,
+      fiat,
+      amount
+    });
+
+    console.log('Sending to bot:', payload);
+
+    // Отправляем данные боту
     tg.sendData(payload);
+
+    // Показываем сообщение об успехе (фейковое, пока бот не ответит)
+    loader.innerHTML = '<div class="success">Card created! Check chat.</div>';
+
+    // Закрываем аппку через 1 секунду после отправки
+    setTimeout(() => tg.close(), 1000);
   }, 2000);
 }
