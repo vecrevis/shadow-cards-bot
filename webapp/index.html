@@ -8,46 +8,81 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <div class="header">𝕊𝕙𝕒𝕕𝕠𝕨 ℂ𝕒𝕣𝕕𝕤</div>
-  
-  <div class="container">
-    <label>Исходная крипта</label>
-    <select id="crypto">
-      <option value="BTC">BTC</option>
-      <option value="ETH">ETH</option>
-      <option value="USDT">USDT</option>
-      <option value="SOL">SOL</option>
-      <option value="TON">TON</option>
-      <option value="XRP">XRP</option>
-      <option value="ADA">ADA</option>
-      <option value="DOGE">DOGE</option>
-    </select>
+  <!-- Splash screen -->
+<div id="splash" class="splash">
+  <div class="logo-container">
+    <div class="logo">Shadow Cards</div>
+    <div class="tagline">Абсолютный контроль. Абсолютная тень.</div>
+  </div>
+  <div class="progress-container">
+    <div class="progress-bar"></div>
+  </div>
+</div>
 
-    <label>Фиат карты</label>
-    <select id="fiat">
-      <option value="USD">USD</option>
-      <option value="EUR">EUR</option>
-      <option value="RUB">RUB</option>
-      <option value="TRY">TRY</option>
-      <option value="BRL">BRL</option>
-      <option value="INR">INR</option>
-      <option value="AED">AED</option>
-      <option value="GBP">GBP</option>
-    </select>
+  <!-- Main content -->
+  <div id="app" class="app hidden">
+    <div class="header">Shadow Cards</div>
 
-    <label>Сумма в крипте</label>
-    <input type="number" id="amount" placeholder="1000" min="0.01" step="0.01">
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="main">Главное</button>
+      <button class="tab" data-tab="cards">Карты</button>
+      <button class="tab" data-tab="settings">Настройки</button>
+    </div>
 
-    <button onclick="createCard()">Создать карту</button>
+    <!-- Tab content -->
+    <div id="main-tab" class="tab-content active">
+      <div class="form">
+        <label>Исходная крипта</label>
+        <select id="crypto">
+          <option value="BTC">BTC</option>
+          <option value="ETH">ETH</option>
+          <option value="USDT">USDT</option>
+          <option value="SOL">SOL</option>
+          <option value="TON">TON</option>
+        </select>
 
-    <div id="result" class="result">
-      <div>Номер: <span id="cardNum"></span></div>
-      <div>Срок: <span id="expiry"></span></div>
-      <div>CVV: <span id="cvv"></span></div>
-      <div>Баланс: <span id="balance"></span></div>
+        <label>Фиат карты</label>
+        <select id="fiat">
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="RUB">RUB</option>
+          <option value="TRY">TRY</option>
+          <option value="BRL">BRL</option>
+        </select>
+
+        <label>Сумма в крипте</label>
+        <input type="number" id="amount" placeholder="1000" min="0.01" step="0.01" value="1000">
+
+        <button onclick="createCard()">Создать карту</button>
+      </div>
+    </div>
+
+    <div id="cards-tab" class="tab-content hidden">
+      <div class="card-list">
+        <!-- Карты будут добавляться динамически -->
+        <div class="empty">Пока нет карт</div>
+      </div>
+    </div>
+
+    <div id="settings-tab" class="tab-content hidden">
+      <div class="settings">
+        <h3>Настройки</h3>
+        <div class="setting-item">Тема: Тёмная</div>
+        <div class="setting-item">Язык: Русский</div>
+        <div class="setting-item">О проекте</div>
+        <button onclick="tg.close()">Выход</button>
+      </div>
+    </div>
+
+    <!-- Loader overlay -->
+    <div id="loader" class="loader hidden">
+      <div class="spinner"></div>
+      <div class="loader-text">Создание карты...</div>
     </div>
   </div>
 
   <script src="script.js"></script>
+  <audio id="startup" src="https://assets.codepen.io/605876/low-deep-synth-whoosh.mp3" preload="auto"></audio>
 </body>
 </html>
