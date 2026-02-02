@@ -9,31 +9,31 @@
 </head>
 <body>
   <!-- Splash screen -->
-<div id="splash" class="splash">
-  <div class="logo-container">
-    <div class="logo">Shadow Cards</div>
-    <div class="tagline">Абсолютный контроль. Абсолютная тень.</div>
+  <div id="splash" class="splash">
+    <div class="logo-container">
+      <div class="logo">Shadow Cards</div>
+      <div class="tagline">Absolute control. Absolute shadow.</div>
+    </div>
+    <div class="progress-container">
+      <div class="progress-bar"></div>
+    </div>
   </div>
-  <div class="progress-container">
-    <div class="progress-bar"></div>
-  </div>
-</div>
 
-  <!-- Main content -->
+  <!-- Main app content (скрыт по умолчанию) -->
   <div id="app" class="app hidden">
     <div class="header">Shadow Cards</div>
 
     <!-- Tabs -->
     <div class="tabs">
-      <button class="tab active" data-tab="main">Главное</button>
-      <button class="tab" data-tab="cards">Карты</button>
-      <button class="tab" data-tab="settings">Настройки</button>
+      <button class="tab active" data-tab="main">Main</button>
+      <button class="tab" data-tab="cards">Cards</button>
+      <button class="tab" data-tab="settings">Settings</button>
     </div>
 
-    <!-- Tab content -->
+    <!-- Main tab -->
     <div id="main-tab" class="tab-content active">
       <div class="form">
-        <label>Исходная крипта</label>
+        <label>Source Crypto</label>
         <select id="crypto">
           <option value="BTC">BTC</option>
           <option value="ETH">ETH</option>
@@ -42,7 +42,7 @@
           <option value="TON">TON</option>
         </select>
 
-        <label>Фиат карты</label>
+        <label>Fiat Currency</label>
         <select id="fiat">
           <option value="USD">USD</option>
           <option value="EUR">EUR</option>
@@ -51,38 +51,37 @@
           <option value="BRL">BRL</option>
         </select>
 
-        <label>Сумма в крипте</label>
+        <label>Amount in Crypto</label>
         <input type="number" id="amount" placeholder="1000" min="0.01" step="0.01" value="1000">
 
-        <button onclick="createCard()">Создать карту</button>
+        <button onclick="createCard()">Create Card</button>
       </div>
     </div>
 
+    <!-- Cards tab (пока пустая) -->
     <div id="cards-tab" class="tab-content hidden">
       <div class="card-list">
-        <!-- Карты будут добавляться динамически -->
-        <div class="empty">Пока нет карт</div>
+        <div class="empty">No cards yet</div>
       </div>
     </div>
 
+    <!-- Settings tab (пока простая) -->
     <div id="settings-tab" class="tab-content hidden">
       <div class="settings">
-        <h3>Настройки</h3>
-        <div class="setting-item">Тема: Тёмная</div>
-        <div class="setting-item">Язык: Русский</div>
-        <div class="setting-item">О проекте</div>
-        <button onclick="tg.close()">Выход</button>
+        <h3>Settings</h3>
+        <div class="setting-item">Theme: Dark</div>
+        <div class="setting-item">Language: English</div>
+        <button onclick="tg.close()">Exit</button>
       </div>
     </div>
 
     <!-- Loader overlay -->
     <div id="loader" class="loader hidden">
       <div class="spinner"></div>
-      <div class="loader-text">Создание карты...</div>
+      <div class="loader-text">Creating card...</div>
     </div>
   </div>
 
   <script src="script.js"></script>
-  <audio id="startup" src="https://assets.codepen.io/605876/low-deep-synth-whoosh.mp3" preload="auto"></audio>
 </body>
 </html>
