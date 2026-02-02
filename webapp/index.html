@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Shadow Cards</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -10,10 +10,8 @@
 <body>
   <!-- Splash -->
   <div id="splash" class="splash">
-    <div class="logo-container">
-      <div class="logo">Shadow Cards</div>
-      <div class="tagline">Absolute control. Absolute shadow.</div>
-    </div>
+    <div class="logo">Shadow Cards</div>
+    <div class="tagline">Absolute control. Absolute shadow.</div>
     <div class="progress-container">
       <div class="progress-bar"></div>
     </div>
@@ -21,6 +19,7 @@
 
   <!-- App -->
   <div id="app" class="app hidden">
+    <!-- Header -->
     <div class="header">Shadow Cards</div>
 
     <!-- Tabs -->
@@ -30,75 +29,69 @@
       <button class="tab" data-tab="settings">Settings</button>
     </div>
 
-    <!-- Main: Wizard -->
-    <div id="main-tab" class="tab-content active">
-      <div id="wizard" class="wizard">
-        <!-- Step 1: Direction -->
-        <div id="step1" class="step active">
-          <h2>Choose Direction</h2>
-          <button class="step-btn" onclick="setDirection('crypto_to_fiat')">Crypto → Fiat</button>
-          <button class="step-btn" onclick="setDirection('fiat_to_crypto')">Fiat → Crypto</button>
-        </div>
-
-        <!-- Step 2: Source -->
-        <div id="step2" class="step hidden">
-          <h2>Source Currency</h2>
-          <select id="source-currency"></select>
-          <button class="next-btn" onclick="goToStep(3)">Next</button>
-        </div>
-
-        <!-- Step 3: Amount + Rate + Address -->
-        <div id="step3" class="step hidden">
-          <h2>Deposit Amount</h2>
-          <input type="number" id="amount" placeholder="1000" min="0.01" step="0.01" value="1000">
-          <div id="conversion-info" class="conversion"></div>
-          <div id="deposit-address-container" class="deposit hidden">
-            <p>Deposit to this address:</p>
-            <code id="deposit-address"></code>
+    <!-- Content -->
+    <div class="content">
+      <!-- Main -->
+      <div id="main-tab" class="tab-content active">
+        <div id="wizard">
+          <!-- Step 1 -->
+          <div id="step1" class="step active">
+            <h2>Choose Direction</h2>
+            <button class="btn primary" onclick="setDirection('crypto_to_fiat')">Crypto → Fiat</button>
+            <button class="btn primary" onclick="setDirection('fiat_to_crypto')">Fiat → Crypto</button>
           </div>
-          <button class="next-btn" onclick="simulateAndGenerate()">Deposit & Create Card</button>
-        </div>
 
-        <!-- Card Result -->
-        <div id="card-result" class="card-result hidden">
-          <canvas id="card-canvas" width="380" height="240"></canvas>
-          <button class="copy-btn" onclick="copyCard()">⚡ Copy Details</button>
+          <!-- Step 2 -->
+          <div id="step2" class="step hidden">
+            <h2>Source Asset</h2>
+            <select id="source"></select>
+            <button class="btn primary" onclick="nextStep(3)">Next</button>
+          </div>
+
+          <!-- Step 3 -->
+          <div id="step3" class="step hidden">
+            <h2>Amount</h2>
+            <input type="number" id="amount" placeholder="1000" min="0.01" step="0.01" value="1000">
+            <div id="rate-display" class="rate"></div>
+            <div id="deposit-box" class="deposit hidden">
+              <p>Send to:</p>
+              <div class="address-box" id="fake-address"></div>
+            </div>
+            <button class="btn primary" onclick="generateCard()">Create Card</button>
+          </div>
+
+          <!-- Result -->
+          <div id="result" class="result hidden">
+            <canvas id="card-canvas" width="340" height="220"></canvas>
+            <button class="btn copy" onclick="copyCard()">⚡ Copy</button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Cards -->
-    <div id="cards-tab" class="tab-content hidden">
-      <div class="card-list" id="card-list">
-        <div class="empty">No cards yet</div>
+      <!-- Cards -->
+      <div id="cards-tab" class="tab-content hidden">
+        <div id="cards-list">
+          <div class="empty">No cards yet</div>
+        </div>
       </div>
-      <button class="refresh-btn" onclick="loadCards()">Refresh Cards</button>
-    </div>
 
-    <!-- Settings -->
-    <div id="settings-tab" class="tab-content hidden">
-      <div class="settings">
-        <h2>Settings</h2>
-        <div class="setting-item">Theme: Dark</div>
-        <div class="setting-item">Language: English</div>
-        <div class="setting-item">
-          <a href="#" onclick="tg.showAlert('Privacy Policy: We do not collect or store any personal data. All transactions are simulated and for entertainment purposes only.')">Privacy Policy</a>
+      <!-- Settings -->
+      <div id="settings-tab" class="tab-content hidden">
+        <div class="settings">
+          <h2>Settings</h2>
+          <div class="item" onclick="tg.showAlert('Privacy Policy\\nWe collect nothing. All is fake.')">Privacy Policy</div>
+          <div class="item" onclick="tg.showAlert('Terms of Use\\nSimulation only. No real funds.')">Terms of Use</div>
+          <div class="item" onclick="tg.showAlert('Support: @sideshow')">Contact Support</div>
+          <div class="item danger" onclick="clearData()">Clear Data</div>
+          <button class="btn exit" onclick="tg.close()">Exit</button>
         </div>
-        <div class="setting-item">
-          <a href="#" onclick="tg.showAlert('Terms of Use: Use at your own risk. No real funds are involved. This is a simulation tool.')">Terms of Use</a>
-        </div>
-        <div class="setting-item">
-          <a href="#" onclick="tg.showAlert('Support: For questions, contact @sideshow')">Contact Support</a>
-        </div>
-        <button class="clear-btn" onclick="clearData()">Clear Data</button>
-        <button class="exit-btn" onclick="tg.close()">Exit</button>
       </div>
     </div>
 
     <!-- Loader -->
     <div id="loader" class="loader hidden">
       <div class="spinner"></div>
-      <div class="loader-text">Processing...</div>
+      <div class="text">Processing...</div>
     </div>
   </div>
 
