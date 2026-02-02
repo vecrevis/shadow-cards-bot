@@ -33,40 +33,39 @@
     <!-- Main tab content -->
     <div id="main-tab" class="tab-content active">
       <div id="wizard" class="wizard">
-        <!-- Шаг 1 -->
+        <!-- Шаг 1: Направление -->
         <div id="step1" class="step active">
           <h2>Выбери направление</h2>
           <button class="step-btn" onclick="setDirection('crypto_to_fiat')">Crypto → Fiat</button>
           <button class="step-btn" onclick="setDirection('fiat_to_crypto')">Fiat → Crypto</button>
         </div>
-    
-        <!-- Шаг 2 -->
+      
+        <!-- Шаг 2: Исходная валюта -->
         <div id="step2" class="step hidden">
           <h2>Исходная валюта</h2>
           <select id="source-currency"></select>
           <button class="next-btn" onclick="goToStep(3)">Далее</button>
         </div>
-    
-        <!-- Шаг 3 -->
+      
+        <!-- Шаг 3: Сумма -->
         <div id="step3" class="step hidden">
           <h2>Сумма</h2>
           <input type="number" id="amount" placeholder="1000" min="0.01" step="0.01" value="1000">
           <div id="conversion-info" class="conversion"></div>
           <button class="next-btn" onclick="generateCard()">Создать карту</button>
         </div>
-    
-        <!-- Результат -->
+      
+        <!-- Результат карты -->
         <div id="card-result" class="card-result hidden">
           <div class="card-preview">
-            <div class="card-number">•••• •••• •••• <span id="card-last4"></span></div>
-            <div class="card-expiry"><span id="card-expiry"></span></div>
-            <div class="card-cvv"><span id="card-cvv"></span></div>
-            <div class="card-balance"><span id="card-balance"></span></div>
+            <div class="card-number">•••• •••• •••• <span id="card-last4">1234</span></div>
+            <div class="card-expiry"><span id="card-expiry">12/28</span></div>
+            <div class="card-cvv">•••</div>
+            <div class="card-balance"><span id="card-balance">0.00</span></div>
           </div>
-          <button class="copy-btn" onclick="copyCard()">⚡ Копировать данные</button>
+          <button class="copy-btn" onclick="copyCard()">⚡ Копировать</button>
         </div>
       </div>
-    </div>
     <!-- Cards tab -->
     <div id="cards-tab" class="tab-content hidden">
       <div class="card-list">
