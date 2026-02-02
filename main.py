@@ -196,59 +196,58 @@ async def balance(message: types.Message):
 async def main():
     await init_db()
     await dp.start_polling(bot)
-
+@dp.message(content_types=types.ContentType.WEB_APP_DATA)
+async def debug_webapp(message: types.Message):
+    print("Получены данные из аппки:", message.web_app_data.data)
+    await message.answer(f"Получено: {message.web_app_data.data}")
 if __name__ == "__main__":
     asyncio.run(main()) 
     from aiogram.filters import ContentType
 import json
 
-@dp.message(content_types=ContentType.WEB_APP_DATA)
-async def web_app_handler(message: types.Message):
-    if not message.web_app_data:
-        return
-
+@dp.message(content_types=types.ContentType.WEB_APP_DATA)
+async def handle_web_app_data(message: types.Message):
+    print("Получены данные из аппки:", message.web_app_data.data)
     try:
         data = json.loads(message.web_app_data.data)
-        if data.get('action') != 'create_card':
-            await message.answer("Неизвестная команда из аппки")
-            return
+        if data.get('action') == 'create_card':
+            crypto = data['crypto']
+            fiat = data['fiat']
+            amount = float(data['amount'])
 
-        crypto = data['crypto']
-        fiat = data['fiat']
-        amount = float(data['amount'])
+            rate = FAKE_RATES.get(crypto, 1.0)
+            fiat_amount = amount * rate * 1000  # твой коэффициент
 
-        # Твоя логика создания карты (как раньше)
-        rate = FAKE_RATES.get(crypto, 1.0)
-        fiat_amount = amount * rate * 1000
-        card_num = generate_card_number()
-        expiry = generate_expiry()
-        cvv = generate_cvv()
+            card_num = generate_card_number()
+            expiry = generate_expiry()
+            cvv = generate_cvv()
 
-        async with aiosqlite.connect(os.getenv("DB_PATH")) as db:
-            await db.execute(
-                "UPDATE users SET balance_crypto = balance_crypto + ? WHERE user_id = ?",
-                (amount, message.from_user.id)
+            async with aiosqlite.connect(os.getenv("DB_PATH")) as db:
+                await db.execute(
+                    "UPDATE users SET balance_crypto = balance_crypto + ? WHERE user_id = ?",
+                    (amount, message.from_user.id)
+                )
+                await db.execute(
+                    "INSERT INTO cards (user_id, crypto, fiat, card_number, expiry, cvv, balance_fiat) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (message.from_user.id, crypto, fiat, card_num, expiry, cvv, fiat_amount)
+                )
+                await db.commit()
+
+            escaped_card = card_num.replace('-', '\\-').replace('.', '\\.')
+            escaped_expiry = expiry.replace('-', '\\-').replace('.', '\\.')
+            escaped_cvv = cvv.replace('-', '\\-').replace('.', '\\.')
+            escaped_bal = f"{fiat_amount:.2f}".replace('.', '\\.')
+
+            await message.answer(
+                f"❄️ Карта создана\n"
+                f"Номер: `{escaped_card}`\n"
+                f"Срок: {escaped_expiry}\n"
+                f"CVV: {escaped_cvv}\n"
+                f"Баланс: {escaped_bal} {fiat}",
+                parse_mode="MarkdownV2"
             )
-            await db.execute(
-                "INSERT INTO cards (user_id, crypto, fiat, card_number, expiry, cvv, balance_fiat) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                (message.from_user.id, crypto, fiat, card_num, expiry, cvv, fiat_amount)
-            )
-            await db.commit()
-
-        # Экранирование для MarkdownV2
-        escaped_card = card_num.replace('-', '\\-').replace('.', '\\.')
-        escaped_expiry = expiry.replace('-', '\\-').replace('.', '\\.')
-        escaped_cvv = cvv.replace('-', '\\-').replace('.', '\\.')
-        escaped_bal = f"{fiat_amount:.2f}".replace('.', '\\.')
-
-        await message.answer(
-            f"❄️ Карта создана из аппки\n"
-            f"Номер: `{escaped_card}`\n"
-            f"Срок: {escaped_expiry}\n"
-            f"CVV: {escaped_cvv}\n"
-            f"Баланс: {escaped_bal} {fiat}",
-            parse_mode="MarkdownV2"
-        )
-
+        else:
+            await message.answer("Неизвестная команда")
     except Exception as e:
-        await message.answer(f"Ошибка обработки: {str(e)}")
+        print("Ошибка в обработке:", str(e))
+        await message.answer(f"Ошибка: {str(e)}")

@@ -40,7 +40,6 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-// Создание карты
 function createCard() {
   const crypto = document.getElementById('crypto').value;
   const fiat = document.getElementById('fiat').value;
@@ -51,10 +50,8 @@ function createCard() {
     return;
   }
 
-  // Показываем лоадер
   loader.classList.remove('hidden');
 
-  // Фейковая задержка 2 секунды (имитация обработки)
   setTimeout(() => {
     const payload = JSON.stringify({
       action: 'create_card',
@@ -64,14 +61,60 @@ function createCard() {
     });
 
     console.log('Sending to bot:', payload);
-
-    // Отправляем данные боту
     tg.sendData(payload);
 
-    // Показываем сообщение об успехе (фейковое, пока бот не ответит)
-    loader.innerHTML = '<div class="success">Card created! Check chat.</div>';
-
-    // Закрываем аппку через 1 секунду после отправки
-    setTimeout(() => tg.close(), 1000);
+    loader.innerHTML = '<div class="success">Card created! Check chat with bot.</div>';
+    setTimeout(() => tg.close(), 1500);
   }, 2000);
 }
+function updateLabels() {
+  const direction = document.getElementById('direction').value;
+  const sourceLabel = document.getElementById('source-label');
+  const targetLabel = document.getElementById('target-label');
+  const amountLabel = document.getElementById('amount-label');
+  const rateInfo = document.getElementById('rate-info');
+
+  if (direction === 'crypto_to_fiat') {
+    sourceLabel.textContent = 'Source Crypto';
+    targetLabel.textContent = 'Target Fiat';
+    amountLabel.textContent = 'Amount in Crypto';
+    rateInfo.textContent = ''; // можно добавить реальный курс позже
+  } else {
+    sourceLabel.textContent = 'Source Fiat';
+    targetLabel.textContent = 'Target Crypto';
+    amountLabel.textContent = 'Amount in Fiat';
+    rateInfo.textContent = '';
+  }
+}
+
+function deposit() {
+  const direction = document.getElementById('direction').value;
+  const source = document.getElementById('source').value;
+  const target = document.getElementById('target').value;
+  const amount = parseFloat(document.getElementById('amount').value);
+
+  if (isNaN(amount) || amount <= 0) {
+    tg.showAlert('Enter a positive amount');
+    return;
+  }
+
+  // Фейковый адрес
+  const fakeAddress = source + '1Fake' + Math.random().toString(36).substring(2, 15);
+
+  document.getElementById('deposit-address').textContent = fakeAddress;
+  document.getElementById('deposit-result').classList.remove('hidden');
+}
+
+function simulateDeposit() {
+  const amount = parseFloat(document.getElementById('amount').value);
+  const target = document.getElementById('target').value;
+
+  // Фейковый баланс (можно сделать умнее позже)
+  const balance = amount * 0.0001; // условно для крипты или наоборот
+
+  document.getElementById('balance-text').textContent = balance.toFixed(8) + ' ' + target;
+  document.getElementById('balance-result').classList.remove('hidden');
+}
+
+// Инициализация при загрузке
+updateLabels();

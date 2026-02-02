@@ -31,30 +31,57 @@
     </div>
 
     <!-- Main tab content -->
-    <div id="main-tab" class="tab-content active">
-      <div class="form">
-        <label>Source Crypto</label>
-        <select id="crypto">
-          <option value="BTC">BTC</option>
-          <option value="ETH">ETH</option>
-          <option value="USDT">USDT</option>
-          <option value="SOL">SOL</option>
-          <option value="TON">TON</option>
-        </select>
-
-        <label>Fiat Currency</label>
-        <select id="fiat">
-          <option value="USD">USD</option>
-          <option value="EUR">EUR</option>
-          <option value="RUB">RUB</option>
-          <option value="TRY">TRY</option>
-          <option value="BRL">BRL</option>
-        </select>
-
-        <label>Amount in Crypto</label>
-        <input type="number" id="amount" placeholder="1000" min="0.01" step="0.01" value="1000">
-
-        <button onclick="createCard()">Create Card</button>
+    <div class="form">
+      <label>Direction</label>
+      <select id="direction" onchange="updateLabels()">
+        <option value="crypto_to_fiat">Crypto → Fiat</option>
+        <option value="fiat_to_crypto">Fiat → Crypto</option>
+      </select>
+    
+      <label id="source-label">Source Crypto</label>
+      <select id="source">
+        <option value="BTC">BTC</option>
+        <option value="ETH">ETH</option>
+        <option value="USDT">USDT</option>
+        <option value="SOL">SOL</option>
+        <option value="TON">TON</option>
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="RUB">RUB</option>
+        <option value="TRY">TRY</option>
+        <option value="BRL">BRL</option>
+      </select>
+    
+      <label id="target-label">Target Fiat</label>
+      <select id="target">
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="RUB">RUB</option>
+        <option value="TRY">TRY</option>
+        <option value="BRL">BRL</option>
+        <option value="BTC">BTC</option>
+        <option value="ETH">ETH</option>
+        <option value="USDT">USDT</option>
+        <option value="SOL">SOL</option>
+        <option value="TON">TON</option>
+      </select>
+    
+      <label id="amount-label">Amount</label>
+      <input type="number" id="amount" placeholder="1000" min="0.01" step="0.01" value="1000">
+    
+      <div id="rate-info" class="rate-info"></div>
+    
+      <button onclick="deposit()">Deposit</button>
+    
+      <div id="deposit-result" class="result hidden">
+        <p>Send to this fake address:</p>
+        <code id="deposit-address"></code>
+        <button onclick="simulateDeposit()">I sent it (simulate)</button>
+      </div>
+    
+      <div id="balance-result" class="result hidden">
+        <h3>Balance</h3>
+        <p id="balance-text">0.00</p>
       </div>
     </div>
 
