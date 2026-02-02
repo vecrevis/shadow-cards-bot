@@ -8,7 +8,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <!-- Splash screen -->
+  <!-- Splash -->
   <div id="splash" class="splash">
     <div class="logo-container">
       <div class="logo">Shadow Cards</div>
@@ -19,7 +19,7 @@
     </div>
   </div>
 
-  <!-- Main app content -->
+  <!-- App -->
   <div id="app" class="app hidden">
     <div class="header">Shadow Cards</div>
 
@@ -30,57 +30,75 @@
       <button class="tab" data-tab="settings">Settings</button>
     </div>
 
-    <!-- Main tab content -->
+    <!-- Main: Wizard -->
     <div id="main-tab" class="tab-content active">
       <div id="wizard" class="wizard">
-        <!-- Шаг 1 уже был, пропускаем -->
-    
-        <!-- Шаг 2: Исходная валюта -->
-        <div id="step2" class="step active">
-          <h2>Исходная валюта</h2>
-          <select id="source-currency"></select>
-          <button class="next-btn" onclick="goToStep3()">Далее</button>
+        <!-- Step 1: Direction -->
+        <div id="step1" class="step active">
+          <h2>Choose Direction</h2>
+          <button class="step-btn" onclick="setDirection('crypto_to_fiat')">Crypto → Fiat</button>
+          <button class="step-btn" onclick="setDirection('fiat_to_crypto')">Fiat → Crypto</button>
         </div>
-    
-        <!-- Шаг 3: Сумма + курс + адрес -->
+
+        <!-- Step 2: Source -->
+        <div id="step2" class="step hidden">
+          <h2>Source Currency</h2>
+          <select id="source-currency"></select>
+          <button class="next-btn" onclick="goToStep(3)">Next</button>
+        </div>
+
+        <!-- Step 3: Amount + Rate + Address -->
         <div id="step3" class="step hidden">
-          <h2>Сумма пополнения</h2>
+          <h2>Deposit Amount</h2>
           <input type="number" id="amount" placeholder="1000" min="0.01" step="0.01" value="1000">
           <div id="conversion-info" class="conversion"></div>
           <div id="deposit-address-container" class="deposit hidden">
-            <p>Адрес для пополнения:</p>
+            <p>Deposit to this address:</p>
             <code id="deposit-address"></code>
           </div>
-          <button class="next-btn" onclick="simulateDepositAndGenerate()">Пополнить и создать карту</button>
+          <button class="next-btn" onclick="simulateAndGenerate()">Deposit & Create Card</button>
         </div>
-    
-        <!-- Результат карты -->
+
+        <!-- Card Result -->
         <div id="card-result" class="card-result hidden">
-          <div class="card-preview">
-            <div class="card-number">•••• •••• •••• <span id="card-last4"></span></div>
-            <div class="card-expiry"><span id="card-expiry"></span></div>
-            <div class="card-cvv">•••</div>
-            <div class="card-balance"><span id="card-balance"></span></div>
-          </div>
-          <button class="copy-btn" onclick="copyCard()">⚡ Копировать</button>
+          <canvas id="card-canvas" width="380" height="240"></canvas>
+          <button class="copy-btn" onclick="copyCard()">⚡ Copy Details</button>
         </div>
       </div>
     </div>
 
-    <!-- Settings tab -->
+    <!-- Cards -->
+    <div id="cards-tab" class="tab-content hidden">
+      <div class="card-list" id="card-list">
+        <div class="empty">No cards yet</div>
+      </div>
+      <button class="refresh-btn" onclick="loadCards()">Refresh Cards</button>
+    </div>
+
+    <!-- Settings -->
     <div id="settings-tab" class="tab-content hidden">
       <div class="settings">
-        <h3>Settings</h3>
+        <h2>Settings</h2>
         <div class="setting-item">Theme: Dark</div>
         <div class="setting-item">Language: English</div>
-        <button onclick="tg.close()">Exit</button>
+        <div class="setting-item">
+          <a href="#" onclick="tg.showAlert('Privacy Policy: We do not collect or store any personal data. All transactions are simulated and for entertainment purposes only.')">Privacy Policy</a>
+        </div>
+        <div class="setting-item">
+          <a href="#" onclick="tg.showAlert('Terms of Use: Use at your own risk. No real funds are involved. This is a simulation tool.')">Terms of Use</a>
+        </div>
+        <div class="setting-item">
+          <a href="#" onclick="tg.showAlert('Support: For questions, contact @sideshow')">Contact Support</a>
+        </div>
+        <button class="clear-btn" onclick="clearData()">Clear Data</button>
+        <button class="exit-btn" onclick="tg.close()">Exit</button>
       </div>
     </div>
 
     <!-- Loader -->
     <div id="loader" class="loader hidden">
       <div class="spinner"></div>
-      <div class="loader-text">Creating card...</div>
+      <div class="loader-text">Processing...</div>
     </div>
   </div>
 
