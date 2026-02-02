@@ -118,3 +118,64 @@ function simulateDeposit() {
 
 // Инициализация при загрузке
 updateLabels();
+let currentStep = 1;
+let direction = 'crypto_to_fiat';
+
+function setDirection(dir) {
+  direction = dir;
+  currentStep = 2;
+  document.getElementById('step1').classList.remove('active');
+  document.getElementById('step2').classList.add('active');
+  updateSourceOptions();
+}
+
+function updateSourceOptions() {
+  const sourceSelect = document.getElementById('source-currency');
+  sourceSelect.innerHTML = '';
+  const options = direction === 'crypto_to_fiat' 
+    ? ['BTC','ETH','USDT','SOL','TON']
+    : ['USD','EUR','RUB','TRY','BRL'];
+  options.forEach(opt => {
+    const option = document.createElement('option');
+    option.value = opt;
+    option.textContent = opt;
+    sourceSelect.appendChild(option);
+  });
+}
+
+function goToStep(step) {
+  currentStep = step;
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + step).classList.add('active');
+}
+
+function generateCard() {
+  const amount = parseFloat(document.getElementById('amount').value);
+  if (isNaN(amount) || amount <= 0) return tg.showAlert('Введи сумму');
+
+  loader.classList.remove('hidden');
+
+  setTimeout(() => {
+    // Фейковая генерация
+    const cardNum = '4' + Math.random().toString().slice(2,18);
+    const expiry = '12/28';
+    const cvv = Math.floor(100 + Math.random() * 900);
+    const balance = amount * 1000; // фейковый курс
+
+    document.getElementById('card-last4').textContent = cardNum.slice(-4);
+    document.getElementById('card-expiry').textContent = expiry;
+    document.getElementById('card-cvv').textContent = '•••';
+    document.getElementById('card-balance').textContent = balance.toFixed(2);
+
+    document.getElementById('card-result').classList.remove('hidden');
+    loader.classList.add('hidden');
+  }, 2000);
+}
+
+function copyCard() {
+  const text = `Номер: ${document.getElementById('card-last4').textContent}\nСрок: ${document.getElementById('card-expiry').textContent}\nCVV: 123`;
+  navigator.clipboard.writeText(text).then(() => tg.showAlert('Скопировано!'));
+}
+
+// Инициализация
+updateSourceOptions();
