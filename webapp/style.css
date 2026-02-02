@@ -1,72 +1,37 @@
-body {
-    margin: 0;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background: #000;
-    color: #e0e0e0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .header {
-    background: #111;
-    padding: 16px;
-    text-align: center;
-    font-size: 1.5em;
-    font-weight: bold;
-    border-bottom: 1px solid #333;
-  }
-  
-  .container {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-  }
-  
-  label {
-    display: block;
-    margin: 12px 0 4px;
-    font-size: 0.95em;
-    color: #aaa;
-  }
-  
-  select, input[type="number"] {
-    width: 100%;
-    padding: 12px;
-    background: #1a1a1a;
-    border: 1px solid #444;
-    color: white;
-    border-radius: 6px;
-    font-size: 1em;
-  }
-  
-  button {
-    width: 100%;
-    padding: 14px;
-    margin-top: 20px;
-    background: #0a3d8c;
-    border: none;
-    color: white;
-    font-size: 1.1em;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background: #1565c0;
-  }
-  
-  .result {
-    margin-top: 24px;
-    padding: 16px;
-    background: #111;
-    border-radius: 8px;
-    border: 1px solid #333;
-    display: none;
-  }
-  
-  .result div {
-    margin: 8px 0;
-    font-family: monospace;
-  }
+body { margin:0; font-family:system-ui, sans-serif; background:#000; color:#e0e0e0; height:100vh; overflow:hidden; }
+.splash { position:fixed; inset:0; background:#000; display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:1000; transition:opacity 0.5s; }
+.logo {
+  font-size: 3.5rem;
+  font-weight: 900;
+  letter-spacing: -2px;
+  background: linear-gradient(90deg, #444, #888, #444);
+  -webkit-background-clip: text;
+  background-clip: text;          /* ← именно эта строка убирает предупреждение */
+  -webkit-text-fill-color: transparent;
+  animation: glitch 4s infinite;
+}
+.progress-container { width:60%; height:3px; background:#222; margin-top:40px; border-radius:2px; overflow:hidden; }  
+
+.progress-bar { width:0; height:100%; background:#0d47a1; transition:width 2s ease-in-out; }
+
+.app { height:100vh; display:flex; flex-direction:column; }
+.header { background:#111; padding:16px; text-align:center; font-size:1.6rem; font-weight:bold; border-bottom:1px solid #333; }
+.tabs { display:flex; background:#111; border-bottom:1px solid #333; }
+.tab { flex:1; padding:14px; background:none; border:none; color:#aaa; font-size:1rem; cursor:pointer; transition:all 0.2s; }
+.tab.active { color:#fff; border-bottom:3px solid #0d47a1; font-weight:bold; }
+.tab-content { flex:1; padding:20px; overflow-y:auto; display:none; }
+.tab-content.active { display:block; }
+
+.form label { display:block; margin:16px 0 6px; color:#aaa; font-size:0.95rem; }
+select, input { width:100%; padding:14px; background:#1a1a1a; border:1px solid #444; color:#fff; border-radius:8px; font-size:1.1rem; margin-bottom:12px; }
+button { width:100%; padding:16px; background:#0d47a1; border:none; color:white; font-size:1.2rem; font-weight:bold; border-radius:8px; cursor:pointer; margin-top:20px; }
+button:hover { background:#1565c0; }
+
+.loader { position:fixed; inset:0; background:rgba(0,0,0,0.9); display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:999; }
+.spinner { width:60px; height:60px; border:5px solid #333; border-top:5px solid #0d47a1; border-radius:50%; animation:spin 1s linear infinite; margin-bottom:20px; }
+.loader-text { font-size:1.3rem; color:#aaa; }
+
+@keyframes spin { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }
+@keyframes glitch { 0%,100% { text-shadow:0 0 10px #fff; } 20% { text-shadow:-2px 0 #f00,2px 0 #0f0; } 40% { text-shadow:2px 0 #f00,-2px 0 #0f0; } }
+
+.hidden { display:none !important; }
